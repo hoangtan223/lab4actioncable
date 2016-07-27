@@ -1,0 +1,6 @@
+<%= render @messages %>
+
+<%= form_for Message.new do |f| %>
+	<%= f.text_field :content %>
+	<%= f.submit 'Send' %>
+<% end %>
