@@ -6,6 +6,7 @@ class MessagesController < ApplicationController
 
 	def create
 		@message = Message.new message_param
+		@message.ip = request.remote_ip
 		if @message.save 
 			redirect_to root_path
 		else
