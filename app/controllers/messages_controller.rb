@@ -14,6 +14,15 @@ class MessagesController < ApplicationController
 		end
 	end
 
+	def destroy
+		@message = Message.find(params[:id])
+		@message.destroy
+		ActionCable.server.broadcast 'messages', message: "destroy-#{@message.id}"
+		respond_to do |format|
+			format.js
+		end
+	end
+
 	private 
 	def message_param
 		params.require(:message).permit(:content, :ip)
@@ -21,6 +30,6 @@ class MessagesController < ApplicationController
 
 	def render_message(message)
     # Your Code Here
-    "<div class=\"message\">#{message.ip}: #{message.content}</div>"
+    "<div id=\"message_#{message.id}\" class=\"message\">#{message.ip}: #{message.content} <a data-remote=\"true\" rel=\"nofollow\" data-method=\"delete\" href=\"/messages/#{message.id}\">x</a></div>"
   end
 end

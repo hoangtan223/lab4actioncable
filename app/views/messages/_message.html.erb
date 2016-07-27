@@ -1,1 +1,1 @@
-<div class="message"><%= message.ip%> : <%= message.content %></div>
+<div id="message_<%=message.id%>" class="message"><%= message.ip%> : <%= message.content %> <%= link_to 'x', message_path(message.id), method: 'delete', remote: true %></div>
