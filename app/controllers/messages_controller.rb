@@ -7,11 +7,10 @@ class MessagesController < ApplicationController
 	def create
 		@message = Message.new message_param
 		@message.ip = request.remote_ip
-		if @message.save 
-			redirect_to root_path
-		else
-			flash[:error] = "Cannot send message"
-			render 'index'
+		@message.save!
+		ActionCable.server.broadcast 'messages', message: render_message(@message)
+		respond_to do |format|
+			format.js
 		end
 	end
 
@@ -19,4 +18,9 @@ class MessagesController < ApplicationController
 	def message_param
 		params.require(:message).permit(:content, :ip)
 	end
+
+	def render_message(message)
+    # Your Code Here
+    "<div class=\"message\">#{message.ip}: #{message.content}</div>"
+  end
 end
